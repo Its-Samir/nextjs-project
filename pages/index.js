@@ -1,6 +1,8 @@
 import MeetupList from '../components/meetups/MeetupList';
 import Meetup from '../models/meetup';
 import Head from 'next/head';
+import { useState } from 'react';
+import Loading from '../components/ui/Loading';
 // import { MongoClient } from 'mongodb';
 
 // const meetups = [
@@ -35,6 +37,11 @@ import Head from 'next/head';
 // ]
 
 function HomePage(props) {
+  const [loading, setLoading] = useState(false);
+
+  const loadingHandler = (isTrue) => {
+    setLoading(isTrue);
+  }
 
   return (
     <>
@@ -42,7 +49,9 @@ function HomePage(props) {
         <title>React Meetups</title>
         <meta name='description' content='A great way to find best meetups location' />
       </Head>
-      <MeetupList meetups={props.meetups} />
+      {loading ? <Loading /> :
+        <MeetupList onLoad={loadingHandler} meetups={props.meetups} />
+      }
     </>
   );
 }
@@ -62,7 +71,7 @@ export async function getStaticProps() {
   //we have to import one thing only like if using mongodb then Import MongoClient, otherwise import mongoose, both cannot be imported even one of these is unused, means we cannot keep unnecessary import if that packege is not using by us. (for backend only)
   const meetups = await Meetup.find({});
 
-  //convereted because of _id to id (we also change this in the MeetupList Component (key={meetup._id} id={meetup._id}) so do not need to convert here)
+  //converted because of _id to id (we also change this in the MeetupList Component (key={meetup._id} id={meetup._id}) so do not need to convert here)
   const meetupList = meetups.map((meetup) => {
     return {
       id: meetup._id.toString(),

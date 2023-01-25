@@ -3,8 +3,7 @@ import classes from './MeetupList.module.css';
 
 function MeetupList(props) {
   return (
-    <ul className={classes.list}>
-      {props.isLoading && <h1 className='loading'>Loading...</h1>}
+    <ul className={classes.list}>      
       {props.meetups.map((meetup) => (
         <MeetupItem
           key={meetup.id}
@@ -12,6 +11,7 @@ function MeetupList(props) {
           image={meetup.image}
           title={meetup.title}
           address={meetup.address}
+          onLoad={props.onLoad}
         />
       ))}
     </ul>
